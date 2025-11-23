@@ -13,6 +13,10 @@ from aria.ops.result import TestResult
 from aria.ops.timer import Timer
 from constants import ADAPTER_KIND
 from constants import ADAPTER_NAME
+# TODO: Remove after tesing
+import os
+import tempfile
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -87,11 +91,42 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
     with Timer(logger, "Collection"):
         result = CollectResult()
         try:
+            # httpEndpointsConfigFile = httpsEndpoints_configFile(adapter_instance)
+            # httpEndpoints = get_config_file_data(adapter_instance, httpEndpointsConfigFile)
+            # For testing: read config file from the local filesystem instead of calling the Suite API
             httpEndpointsConfigFile = httpsEndpoints_configFile(adapter_instance)
-            httpEndpoints = get_config_file_data(adapter_instance, httpEndpointsConfigFile)
+            # Use provided name, append .xml if needed
+            filename = httpEndpointsConfigFile if httpEndpointsConfigFile.endswith(".xml") else f"{httpEndpointsConfigFile}.xml"
+            # Use a writable temporary directory instead of the current working directory
+            preferred_dir = tempfile.gettempdir()
+            created_path = os.path.join(preferred_dir, filename)
+            # Write a simple XML wrapper with the specified endpoints in the element text
+            xml_content = (
+                "www.thomas-kopton.de:443,\n"
+                "www.yahoo.de:443\n"
+            )
+            try:
+                with open(created_path, "w", encoding="utf-8") as fh:
+                    fh.write(xml_content)
+                logger.info(f"Created config file at: {created_path}")
+            except Exception as e:
+                logger.error(f"Unable to create config file at {preferred_dir}: {e}")
+
+            # Read and parse the created config file
+            httpEndpoints = []
+            try:
+                with open(created_path, "r", encoding="utf-8") as fh:
+                    raw = fh.read()
+                logger.info(f"Config file raw content: {raw!r}")
+                # Split on commas and any whitespace/newlines, then strip and filter empties
+                parts = re.split(r'[,\s]+', raw)
+                httpEndpoints = [p.strip() for p in parts if p.strip()]
+            except Exception as e:
+                logger.error(f"Error reading local config file {created_path}: {e}")
+                httpEndpoints = []
+
             for endpoint in httpEndpoints:
-                logger.debug(f"Processing endpoint: {endpoint}")
-                pass # TODO: Remove pass statement and add collection logic
+                logger.info(f"Processing endpoint: {endpoint}")
 
         except Exception as e:
             logger.error("Unexpected collection error")
