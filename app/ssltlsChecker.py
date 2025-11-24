@@ -1,4 +1,3 @@
-import sys
 import socket
 import ssl
 from datetime import datetime, timezone
@@ -6,7 +5,6 @@ import re
 import warnings
 import logging
 from constants import ADAPTER_KIND
-from constants import ADAPTER_NAME
 
 # suppress deprecation warnings about TLSVersion lookups (selective)
 warnings.filterwarnings(
@@ -140,14 +138,6 @@ def process_endpoint(result, httpsEndpoint):
     except Exception as e:
         logger.debug("Failed to connect and get certificate:", e)
         info = None
-    
-        """
-        httpsEndpoint_instance.define_metric(
-        "remainig_days", "Days until expiry")
-
-        httpsEndpoint_instance.define_string_property(
-            "certificate_expires", "Certificate expires")
-        """
 
     if info:
         cert = info.get('cert') or {}
@@ -166,14 +156,27 @@ def process_endpoint(result, httpsEndpoint):
                     endpoint.with_metric("cypher_bits", cipher[2])
             else:
                 logger.debug("Cipher:", cipher)
-
+        
         notafter = cert.get('notAfter')
+        # If the dict from getpeercert() didn't include notAfter, attempt fallback decode
+        if not notafter:
+            try:
+                decoded = _try_decode_server_cert_via_get_server_certificate(host, port)
+                if decoded and decoded.get('notAfter'):
+                    notafter = decoded.get('notAfter')
+                    # merge fallback into cert for later fields if empty
+                    if isinstance(cert, dict):
+                        cert = dict(cert)
+                        cert['notAfter'] = notafter
+            except Exception:
+                pass
+
         if notafter:
             dt = parse_notafter(notafter)
             days = days_until(dt)
-            logger.debug("Certificate expires:", notafter)
+            endpoint.with_property("certificate_expires", notafter)
             if days is not None:
-                logger.debug("Days until expiry:", days)
+                endpoint.with_metric("remainig_days", days)
             else:
                 logger.debug("Days until expiry: unknown (could not parse date)")
         else:
