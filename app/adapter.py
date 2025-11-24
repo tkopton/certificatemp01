@@ -76,7 +76,7 @@ def httpsEndpoints_configFile(adapter_instance: AdapterInstance) -> str:
     return httpsEndpoints_config_file
 
 def get_config_file_data(adapter_instance: AdapterInstance, configFile) -> str:
-    apiPath = f"api/configurations/files?path=SolutionConfig/{configFile}.xml"
+    apiPath = f"api/configurations/files?path=SolutionConfig/{configFile}"
     logger.debug("apiPath: ")
     logger.debug(apiPath)
     with adapter_instance.suite_api_client as suite_api:
@@ -111,19 +111,19 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
     with Timer(logger, "Collection"):
         result = CollectResult()
         try:
-            # httpEndpointsConfigFile = httpsEndpoints_configFile(adapter_instance)
-            # httpEndpoints = get_config_file_data(adapter_instance, httpEndpointsConfigFile)
-            # For testing: read config file from the local filesystem instead of calling the Suite API
             httpEndpointsConfigFile = httpsEndpoints_configFile(adapter_instance)
             # Use provided name, append .xml if needed
             filename = httpEndpointsConfigFile if httpEndpointsConfigFile.endswith(".xml") else f"{httpEndpointsConfigFile}.xml"
+            httpEndpoints = get_config_file_data(adapter_instance, filename)
+            
+            """
             # Use a writable temporary directory instead of the current working directory
             preferred_dir = tempfile.gettempdir()
             created_path = os.path.join(preferred_dir, filename)
             # Write a simple XML wrapper with the specified endpoints in the element text
             xml_content = (
                 "www.thomas-kopton.de:443,\n"
-                "www.yahoo.de:443\n"
+                "www.yahoo.de:443\n"httpEndpointsConfigFile
             )
             try:
                 with open(created_path, "w", encoding="utf-8") as fh:
@@ -144,6 +144,7 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
             except Exception as e:
                 logger.error(f"Error reading local config file {created_path}: {e}")
                 httpEndpoints = []
+            """
 
             for endpoint in httpEndpoints:
                 logger.info(f"Processing endpoint: {endpoint}")
