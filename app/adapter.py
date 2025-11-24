@@ -11,6 +11,7 @@ from aria.ops.result import CollectResult # type: ignore
 from aria.ops.result import EndpointResult # type: ignore
 from aria.ops.result import TestResult # type: ignore
 from aria.ops.timer import Timer # type: ignore
+from ssltlsChecker import process_endpoint
 from constants import ADAPTER_KIND
 from constants import ADAPTER_NAME
 # TODO: Remove after tesing
@@ -146,6 +147,7 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
 
             for endpoint in httpEndpoints:
                 logger.info(f"Processing endpoint: {endpoint}")
+                process_endpoint(endpoint)
 
         except Exception as e:
             logger.error("Unexpected collection error")

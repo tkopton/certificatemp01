@@ -121,21 +121,12 @@ def _try_decode_server_cert_via_get_server_certificate(host, port):
         return None
 
 
-def main():
-    if len(sys.argv) >= 2:
-        endpoint = sys.argv[1]
-    else:
-        try:
-            endpoint = input("Endpoint (host:port): ").strip()
-        except EOFError:
-            print("No endpoint provided.")
-            sys.exit(2)
-
+def process_endpoint(result, httpsEndpoint):
     try:
-        host, port = parse_endpoint(endpoint)
+        host, port = parse_endpoint(httpsEndpoint)
     except Exception as e:
         print("Invalid endpoint:", e)
-        sys.exit(2)
+        return
 
     print(f"Checking {host}:{port} ...")
 
@@ -155,7 +146,6 @@ def main():
         if negotiated_proto:
             print("Protocol family:", "SSL" if negotiated_proto.upper().startswith("SSL") else "TLS")
         if cipher:
-            # cipher is tuple (name, protocol, bits) in many Python versions
             if isinstance(cipher, (list, tuple)):
                 print("Cipher suite:", cipher[0])
                 if len(cipher) > 1 and cipher[1]:
@@ -166,19 +156,6 @@ def main():
                 print("Cipher:", cipher)
 
         notafter = cert.get('notAfter')
-        # If the dict from getpeercert() didn't include notAfter, attempt fallback decode
-        if not notafter:
-            try:
-                decoded = _try_decode_server_cert_via_get_server_certificate(host, port)
-                if decoded and decoded.get('notAfter'):
-                    notafter = decoded.get('notAfter')
-                    # merge fallback into cert for later fields if empty
-                    if isinstance(cert, dict):
-                        cert = dict(cert)
-                        cert['notAfter'] = notafter
-            except Exception:
-                pass
-
         if notafter:
             dt = parse_notafter(notafter)
             days = days_until(dt)
@@ -194,7 +171,6 @@ def main():
 
         subj = cert.get('subject')
         if subj:
-            # subject is a sequence of tuples
             subj_str = ", ".join("=".join(pair) for rdn in subj for pair in rdn)
             print("Certificate subject:", subj_str)
         issuer = cert.get('issuer')
@@ -204,6 +180,3 @@ def main():
     else:
         print()
         print("Could not retrieve certificate details.")
-
-if __name__ == "__main__":
-    main()
