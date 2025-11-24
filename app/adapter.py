@@ -3,14 +3,14 @@
 import sys
 from typing import List
 
-import aria.ops.adapter_logging as logging
+import aria.ops.adapter_logging as logging # type: ignore
 import xml.etree.ElementTree as ET
-from aria.ops.adapter_instance import AdapterInstance
-from aria.ops.definition.adapter_definition import AdapterDefinition
-from aria.ops.result import CollectResult
-from aria.ops.result import EndpointResult
-from aria.ops.result import TestResult
-from aria.ops.timer import Timer
+from aria.ops.adapter_instance import AdapterInstance # type: ignore
+from aria.ops.definition.adapter_definition import AdapterDefinition # type: ignore
+from aria.ops.result import CollectResult # type: ignore
+from aria.ops.result import EndpointResult # type: ignore
+from aria.ops.result import TestResult # type: ignore
+from aria.ops.timer import Timer # type: ignore
 from constants import ADAPTER_KIND
 from constants import ADAPTER_NAME
 # TODO: Remove after tesing
