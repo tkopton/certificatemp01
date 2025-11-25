@@ -186,6 +186,7 @@ def process_endpoint(result, httpsEndpoint):
         if subj:
             subj_str = ", ".join("=".join(pair) for rdn in subj for pair in rdn)
             endpoint.with_property("certificate_subject", subj_str)
+        
         issuer = cert.get('issuer')
         if issuer:
             issuer_str = ", ".join("=".join(pair) for rdn in issuer for pair in rdn)
