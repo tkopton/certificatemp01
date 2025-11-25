@@ -185,11 +185,11 @@ def process_endpoint(result, httpsEndpoint):
         subj = cert.get('subject')
         if subj:
             subj_str = ", ".join("=".join(pair) for rdn in subj for pair in rdn)
-            logger.debug("Certificate subject:", subj_str)
+            endpoint.with_property("certificate_subject", subj_str)
         issuer = cert.get('issuer')
         if issuer:
             issuer_str = ", ".join("=".join(pair) for rdn in issuer for pair in rdn)
-            logger.debug("Certificate issuer:", issuer_str)
+            endpoint.with_property("certificate_issuer", issuer_str)
     
         result.add_object(endpoint)
 

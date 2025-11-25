@@ -67,6 +67,12 @@ def get_adapter_definition() -> AdapterDefinition:
 
         httpsEndpoint_instance.define_string_property(
             "certificate_expires", "Certificate expires")
+        
+        httpsEndpoint_instance.define_string_property(
+            "certificate_subject", "Certificate subject")
+        
+        httpsEndpoint_instance.define_string_property(
+            "certificate_issuer", "Certificate issuer")
 
         logger.debug(f"Returning adapter definition: {definition.to_json()}")
         return definition
