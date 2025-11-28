@@ -168,7 +168,6 @@ def process_endpoint(result, httpsEndpoint):
         logger.error("Invalid endpoint:", e)
         return
 
-    # logger.debug(f"Checking {host}:{port} ...")
     endpoint = result.object(
                         ADAPTER_KIND, "httpsEndpoint_resource_kind", host)
 
