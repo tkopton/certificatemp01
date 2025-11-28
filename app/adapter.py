@@ -14,7 +14,7 @@ from aria.ops.timer import Timer # type: ignore
 from ssltlsChecker import process_endpoint
 from constants import ADAPTER_KIND
 from constants import ADAPTER_NAME
-# TODO: Remove after tesing
+# TODO: Remove after tesing localy
 import os
 import tempfile
 import re
