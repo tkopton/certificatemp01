@@ -47,10 +47,10 @@ def get_adapter_definition() -> AdapterDefinition:
 
         # Object definitions and their metrics/properties
         httpsWorld_instance = definition.define_object_type(
-            "httpsWorld_resource_kind", "SSL/TLS World")
+            "httpsWorld_resource_kind", "SSL-TLS World")
 
         httpsEndpoint_instance = definition.define_object_type(
-            "httpsEndpoint_resource_kind", "SSL/TLS Endpoint")
+            "httpsEndpoint_resource_kind", "SSL-TLS Endpoint")
 
         httpsEndpoint_instance.define_metric(
             "remainig_days", "Days until expiry")
