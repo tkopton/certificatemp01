@@ -161,7 +161,7 @@ def _try_decode_server_cert_via_get_server_certificate(host, port):
         return None
 
 
-def process_endpoint(result, httpsEndpoint):
+def process_endpoint(result, httpsEndpoint, ssltlsWorld):
     try:
         host, port = parse_endpoint(httpsEndpoint)
     except Exception as e:
@@ -231,6 +231,7 @@ def process_endpoint(result, httpsEndpoint):
             endpoint.with_property("certificate_issuer", issuer_str)
     
         result.add_object(endpoint)
+        ssltlsWorld.add_child(endpoint)
 
     else:
         logger.debug("Could not retrieve certificate details.")

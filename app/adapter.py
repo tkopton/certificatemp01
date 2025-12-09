@@ -122,6 +122,9 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
     with Timer(logger, "Collection"):
         result = CollectResult()
         try:
+            ssltls_world = result.object(
+                        ADAPTER_KIND, "httpsWorld_resource_kind", "SSL-TLS-World")
+            result.add_object(ssltls_world)
             httpEndpointsConfigFile = httpsEndpoints_configFile(adapter_instance)
             # Use provided name, append .xml if needed
             filename = httpEndpointsConfigFile if httpEndpointsConfigFile.endswith(".xml") else f"{httpEndpointsConfigFile}.xml"
@@ -159,7 +162,7 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
 
             for endpoint in httpEndpoints:
                 logger.info(f"Processing endpoint: {endpoint}")
-                process_endpoint(result, endpoint)
+                process_endpoint(result, endpoint, ssltls_world)
 
         except Exception as e:
             logger.error("Unexpected collection error")
