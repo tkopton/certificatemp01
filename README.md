@@ -19,6 +19,17 @@ This Management Pack is designed as a modern and superior alternative to my old 
 * `remainig_days`: days until certificate expiry
 
 #### Content
+* Dashboards
+    * Certificate-Checker-Overview
+* Views
+    * Certificate-Checker-DaysToExpire
+    * Certificate-Checker-Protocols
+    * Certificate-Checker-KeyLength
+    * Certificate-Checker-Ciphers
+* Reports
+    * Certificate-Checker-Overview
+* Alert Definitions
+    *  Certificate-Checker-Cert-Expires
 
 ## Install
 
