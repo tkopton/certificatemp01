@@ -49,7 +49,7 @@ https://vmware.github.io/vmware-aria-operations-integration-sdk/get_started/
 
 ### Installation Steps
 
-1.  **step1**
+1.  **Download the pak File from this repo: https://github.com/tkopton/certificatecheckermp/blob/main/CertificateCheck_1.0.0.pak**
     
 
 2.  **Install dependencies:**
