@@ -1,6 +1,8 @@
 # SSL/TLS Certificate Checker Management Pack
 
-[Short description of what the project does. E.g., A Python utility to push images to Docker Hub securely.]
+The purpose of this Management Pack is to monitor SSL and TLS certificates for endpoints that are not included out-of-the-box in VCF Operations—primarily non-VCF components, meaning practically anything that secures a service with a certificate.
+
+This Management Pack is designed as a modern and superior alternative to my old approach using Telegraf and scripts, as described in my blog: https://thomas-kopton.de/vblog/?p=538.
 
 #### Collected Properties
 
@@ -15,6 +17,8 @@
 
 * cypher_bits: numeric cipher bit strength
 * remainig_days: days until certificate expiry
+
+#### Content
 
 ## Install
 
